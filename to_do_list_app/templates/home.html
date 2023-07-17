@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" >
+    <form  role="search" method="POST">
+        {% csrf_token %}
+        <!-- <input class="form-control mr-sm-2" type="search" placeholder="Add item" aria-label="Search"> -->
+        {{form.as_p}}
+        <button class="btn btn-outline-secondary mb-2 my-sm-0" style="float:right" type="submit">+ Add item</button>
+    </form>
+</div>
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-warning alert-dismissable" role="alert">
+            <button class="close" data-dismiss="alert">
+                <small><sup></sup></small>
+            </button>
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% if all_items %}
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope = "col">Title</th>
+                <th scope = "col">Description</th>
+                <th scope = "col">Start Date</th>
+                <th scope = "col">End Date</th>
+                <th scope = "col">Status</th>
+                
+            </tr>
+        </thead>
+    {% for things in all_items %}
+        {% if things.completed %}
+            <tr class="table-secondary">
+                <td class="striker"><a href="{% url 'edit' things.id %}">{{ things.item }}</a></td>
+                <td>{{things.description}}</td>
+                <td>{{things.start_date}}</td>
+                <td>{{things.end_date}}</td>
+                <td><center><a href="{% url 'uncross' things.id %}">Completed</a></center></td>
+                <td><center><a href="{% url 'delete' things.id %}">Delete</a></center></td>
+                
+            </tr>
+        {% else %}
+            <tr>
+                <td><a href="{% url 'edit' things.id %}">{{ things.item }}</a></td>
+                <td>{{things.description}}</td>
+                <td>{{things.start_date}}</td>
+                <td>{{things.end_date}}</td>
+                <td><center><a href="{% url 'cross_off' things.id %}">Pending</a></center></td>
+                <td><center><a href="{% url 'delete' things.id %}">Delete</a></center></td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+    </table>
+{% endif %}
+
+{% endblock %}
+
+
